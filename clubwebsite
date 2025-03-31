@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skyward Explorers - Aviation Club</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-icons@0.259.0/dist/umd/lucide.min.css">
+  <style>
+    /* Base styles */
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    /* Aviation Club Styles */
+    .glow-title {
+      text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #0ff, 0 0 70px #0ff, 0 0 80px #0ff, 0 0 100px #0ff, 0 0 150px #0ff;
+      animation: neon-pulse 3s infinite;
+    }
+
+    .text-glow {
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.8), 0 0 12px rgba(100, 181, 246, 0.6);
+    }
+
+    .text-glow-sm {
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+    }
+
+    .hover-shadow-blue:hover {
+      box-shadow: 0 0 15px rgba(100, 181, 246, 0.7);
+    }
+
+    @keyframes neon-pulse {
+      0% {
+        text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #0ff, 0 0 70px #0ff, 0 0 80px #0ff;
+      }
+      50% {
+        text-shadow: 0 0 15px #fff, 0 0 25px #fff, 0 0 35px #fff, 0 0 45px #0ff, 0 0 75px #0ff, 0 0 85px #0ff, 0 0 105px #0ff, 0 0 155px #0ff;
+      }
+      100% {
+        text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #0ff, 0 0 70px #0ff, 0 0 80px #0ff;
+      }
+    }
+
+    /* Cloud animations */
+    .clouds-container {
+      overflow: hidden;
+    }
+
+    .cloud {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      filter: blur(20px);
+    }
+
+    .cloud-1 {
+      width: 200px;
+      height: 100px;
+      top: 10%;
+      left: -10%;
+      animation: cloud-move-1 80s linear infinite;
+    }
+
+    .cloud-2 {
+      width: 300px;
+      height: 150px;
+      top: 30%;
+      left: -15%;
+      animation: cloud-move-2 120s linear infinite;
+    }
+
+    .cloud-3 {
+      width: 250px;
+      height: 125px;
+      top: 60%;
+      left: -12%;
+      animation: cloud-move-3 100s linear infinite;
+    }
+
+    .cloud-4 {
+      width: 180px;
+      height: 90px;
+      top: 80%;
+      left: -9%;
+      animation: cloud-move-4 90s linear infinite;
+    }
+
+    @keyframes cloud-move-1 {
+      0% { left: -10%; }
+      100% { left: 110%; }
+    }
+
+    @keyframes cloud-move-2 {
+      0% { left: -15%; }
+      100% { left: 110%; }
+    }
+
+    @keyframes cloud-move-3 {
+      0% { left: -12%; }
+      100% { left: 110%; }
+    }
+
+    @keyframes cloud-move-4 {
+      0% { left: -9%; }
+      100% { left: 110%; }
+    }
+
+    /* Paper plane animation */
+    .paper-plane {
+      filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Card styles */
+    .card {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 0.5rem;
+      transition: all 0.3s;
+    }
+
+    .card:hover {
+      box-shadow: 0 0 15px rgba(100, 181, 246, 0.7);
+    }
+
+    /* Animation classes */
+    .section-content {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.3s ease, opacity 0.3s ease;
+    }
+
+    .section-content.expanded {
+      max-height: 2000px;
+      opacity: 1;
+    }
+
+    /* Paper plane tooltip */
+    .plane-tooltip {
+      position: absolute;
+      background-color: rgba(255, 255, 255, 0.9);
+      color: #1e40af;
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      white-space: nowrap;
+      font-size: 0.75rem;
+      font-weight: 500;
+      transform: rotate(0deg);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+
+    .plane-container:hover .plane-tooltip {
+      opacity: 1;
+    }
+
+    .plane-container {
+      position: absolute;
+      z-index: 10;
+      cursor: pointer;
+      transition: transform 0.3s, filter 0.3s;
+    }
+
+    .plane-container:hover {
+      transform: scale(1.5);
+      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
+    }
+
+    /* Background gradient */
+    .bg-gradient {
+      background: linear-gradient(to bottom, #0369a1, #0ea5e9, #7dd3fc);
+      min-height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <div id="container" class="bg-gradient relative overflow-hidden">
+    <!-- Animated clouds background -->
+    <div class="clouds-container absolute inset-0 z-0">
+      <div class="cloud cloud-1"></div>
+      <div class="cloud cloud-2"></div>
+      <div class="cloud cloud-3"></div>
+      <div class="cloud cloud-4"></div>
+    </div>
+
+    <!-- Flying paper planes will be added by JavaScript -->
+    <div id="planes-container"></div>
+
+    <div class="container mx-auto px-4 py-12 relative z-10">
+      <!-- Glowing title -->
+      <div class="text-center mb-16 opacity-0" id="header">
+        <h1 class="text-5xl md:text-7xl font-bold mb-4 text-cyan-100 glow-title">Skyward Explorers</h1>
+        <p class="text-xl md:text-2xl text-white text-glow">High School Aviation Club</p>
+      </div>
+
+      <!-- Main content -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <!-- About section -->
+        <div class="col-span-1 md:col-span-3 card p-6" id="about-card">
+          <div class="flex items-center justify-between cursor-pointer" onclick="toggleSection('about')">
+            <div class="flex items-center">
+              <i data-lucide="info" class="mr-2 h-6 w-6 text-blue-600"></i>
+              <h2 class="text-2xl font-bold text-blue-800">About Our Club</h2>
+            </div>
+            <i data-lucide="chevron-up" class="h-6 w-6 text-blue-600" id="about-icon"></i>
+          </div>
+
+          <div class="section-content expanded" id="about-content">
+            <p class="mt-4 text-gray-700">
+              Welcome to Skyward Explorers, where we fuel the passion for aviation in young minds! Our club is
+              dedicated to introducing high school students to the exciting world of flight through hands-on
+              activities, educational experiences, and fun social events.
+            </p>
+            <p class="mt-2 text-gray-700">
+              Whether you dream of becoming a pilot, aerospace engineer, or simply have a curiosity about how
+              planes work, our club offers something for everyone. No prior experience necessary—just bring your
+              enthusiasm and willingness to learn!
+            </p>
+            <div class="mt-4 flex justify-center">
+              <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md" 
+                      onclick="event.stopPropagation(); toggleSection('join')">
+                Join Us Today
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activities section -->
+        <div class="col-span-1 md:col-span-2 card p-6" id="activities-card">
+          <div class="flex items-center justify-between cursor-pointer" onclick="toggleSection('activities')">
+            <div class="flex items-center">
+              <i data-lucide="plane" class="mr-2 h-6 w-6 text-blue-600"></i>
+              <h2 class="text-2xl font-bold text-blue-800">Club Activities</h2>
+            </div>
+            <i data-lucide="chevron-down" class="h-6 w-6 text-blue-600" id="activities-icon"></i>
+          </div>
+
+          <div class="section-content" id="activities-content">
+            <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4" id="activities-list">
+              <!-- Activities will be added by JavaScript -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Events section -->
+        <div class="col-span-1 card p-6" id="events-card">
+          <div class="flex items-center justify-between cursor-pointer" onclick="toggleSection('events')">
+            <div class="flex items-center">
+              <i data-lucide="calendar" class="mr-2 h-6 w-6 text-blue-600"></i>
+              <h2 class="text-2xl font-bold text-blue-800">Upcoming Events</h2>
+            </div>
+            <i data-lucide="chevron-down" class="h-6 w-6 text-blue-600" id="events-icon"></i>
+          </div>
+
+          <div class="section-content" id="events-content">
+            <ul class="mt-4 space-y-3">
+              <li class="border-l-4 border-blue-500 pl-3 py-1">
+                <span class="block text-blue-800 font-medium">Airport Field Trip</span>
+                <span class="text-sm text-gray-600">September 15, 2023</span>
+              </li>
+              <li class="border-l-4 border-blue-500 pl-3 py-1">
+                <span class="block text-blue-800 font-medium">Guest Speaker: Air Traffic Controller</span>
+                <span class="text-sm text-gray-600">October 5, 2023</span>
+              </li>
+              <li class="border-l-4 border-blue-500 pl-3 py-1">
+                <span class="block text-blue-800 font-medium">Paper Airplane Competition</span>
+                <span class="text-sm text-gray-600">October 20, 2023</span>
+              </li>
+              <li class="border-l-4 border-blue-500 pl-3 py-1">
+                <span class="block text-blue-800 font-medium">Aviation Movie Night</span>
+                <span class="text-sm text-gray-600">November 10, 2023</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Join section -->
+        <div class="col-span-1 md:col-span-3 card p-6" id="join-card">
+          <div class="flex items-center justify-between cursor-pointer" onclick="toggleSection('join')">
+            <div class="flex items-center">
+              <i data-lucide="users" class="mr-2 h-6 w-6 text-blue-600"></i>
+              <h2 class="text-2xl font-bold text-blue-800">Join Skyward Explorers</h2>
+            </div>
+            <i data-lucide="chevron-down" class="h-6 w-6 text-blue-600" id="join-icon"></i>
+          </div>
+
+          <div class="section-content" id="join-content">
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h3 class="text-xl font-semibold text-blue-700 mb-3">Member Benefits</h3>
+                <ul class="space-y-2">
+                  <li class="flex items-start">
+                    <i data-lucide="award" class="h-5 w-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                    <span class="text-gray-700">Access to flight simulators and equipment</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i data-lucide="award" class="h-5 w-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                    <span class="text-gray-700">
+                      Exclusive field trips to airports and aviation facilities
+                    </span>
+                  </li>
+                  <li class="flex items-start">
+                    <i data-lucide="award" class="h-5 w-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                    <span class="text-gray-700">Networking with aviation professionals</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i data-lucide="award" class="h-5 w-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                    <span class="text-gray-700">Hands-on experience with aircraft principles</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i data-lucide="award" class="h-5 w-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                    <span class="text-gray-700">Club t-shirt and membership card</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="bg-blue-50 p-6 rounded-lg">
+                <h3 class="text-xl font-semibold text-blue-700 mb-3">How to Join</h3>
+                <p class="text-gray-700 mb-4">
+                  We meet every Thursday after school in Room 305. New members are always welcome!
+                </p>
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
+                    <input
+                      type="text"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Enter your name"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                    <input
+                      type="email"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Enter your email"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Grade Level</label>
+                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option>Select your grade</option>
+                      <option>Freshman</option>
+                      <option>Sophomore</option>
+                      <option>Junior</option>
+                      <option>Senior</option>
+                    </select>
+                  </div>
+                  <button class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md">
+                    Submit Interest Form
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="text-center text-white text-glow-sm mt-8">
+        <p>© <span id="current-year"></span> Skyward Explorers Aviation Club | Lincoln High School</p>
+        <p class="text-sm mt-1">Contact: aviationclub@lincolnhigh.edu | Room 305</p>
+        <p class="text-xs mt-4">Click on the flying paper planes to discover more about our activities!</p>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Load Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+    
+    // Set current year in footer
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+    
+    // Animation for header
+    setTimeout(() => {
+      const header = document.getElementById('header');
+      header.style.opacity = '1';
+      header.style.transform = 'translateY(0)';
+      header.style.transition = 'opacity 1.2s, transform 1.2s';
+    }, 100);
+
+    // Club activities data
+    const clubActivities = [
+      { name: "Flight Simulator Sessions", description: "Practice flying with our state-of-the-art simulators" },
+      { name: "Model Aircraft Building", description: "Design and build your own model planes" },
+      { name: "Aviation History", description: "Learn about the pioneers of flight and aviation milestones" },
+      { name: "Field Trips", description: "Visit local airports and aviation museums" },
+      { name: "Guest Speakers", description: "Meet pilots and aviation professionals" },
+    ];
+
+    // Populate activities
+    const activitiesList = document.getElementById('activities-list');
+    clubActivities.forEach((activity, index) => {
+      const div = document.createElement('div');
+      div.className = 'bg-blue-50 p-4 rounded-lg hover:bg-blue-100 transition-colors';
+      div.style.opacity = '0';
+      div.style.transform = 'translateY(20px)';
+      
+      div.innerHTML = `
+        <h3 class="font-semibold text-blue-700">${activity.name}</h3>
+        <p class="text-sm text-gray-600">${activity.description}</p>
+      `;
+      
+      activitiesList.appendChild(div);
+      
+      // Add animation when section is expanded
+      document.getElementById('activities-content').addEventListener('transitionend', () => {
+        if (document.getElementById('activities-content').classList.contains('expanded')) {
+          setTimeout(() => {
+            div.style.opacity = '1';
+            div.style.transform = 'translateY(0)';
+            div.style.transition = 'opacity 0.5s, transform 0.5s';
+          }, index * 100);
+        }
+      });
+    });
+
+    // Section toggle functionality
+    const expandedSection = 'about'; // Default expanded section
+    updateSectionStates();
+
+    function toggleSection(section) {
+      const sectionContent = document.getElementById(`${section}-content`);
+      const sectionIcon = document.getElementById(`${section}-icon`);
+      
+      if (sectionContent.classList.contains('expanded')) {
+        sectionContent.classList.remove('expanded');
+        sectionIcon.setAttribute('data-lucide', 'chevron-down');
+      } else {
+        sectionContent.classList.add('expanded');
+        sectionIcon.setAttribute('data-lucide', 'chevron-up');
+      }
+      
+      lucide.createIcons();
+    }
+
+    function updateSectionStates() {
+      ['about', 'activities', 'events', 'join'].forEach(section => {
+        const content = document.getElementById(`${section}-content`);
+        const icon = document.getElementById(`${section}-icon`);
+        
+        if (section === expandedSection) {
+          content.classList.add('expanded');
+          icon.setAttribute('data-lucide', 'chevron-up');
+        } else {
+          content.classList.remove('expanded');
+          icon.setAttribute('data-lucide', 'chevron-down');
+        }
+      });
+      
+      lucide.createIcons();
+    }
+
+    // Paper plane functionality
+    const container = document.getElementById('container');
+    const planesContainer = document.getElementById('planes-container');
+    let mousePosition = { x: 0, y: 0 };
+    let planes = [];
+    let lastUpdateTime = Date.now();
+    let animationFrameId = null;
+
+    // Track mouse position
+    container.addEventListener('mousemove', (e) => {
+      const now = Date.now();
+      if (now - lastUpdateTime < 50) {
+        return;
+      }
+      lastUpdateTime = now;
+
+      const rect = container.getBoundingClientRect();
+      mousePosition = {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      };
+    });
+
+    // Generate initial paper planes
+    function createPlanes() {
+      for (let i = 0; i < 8; i++) {
+        const plane = {
+          id: i,
+          x: Math.random() * 100,
+          y: Math.random() * 100,
+          rotation: Math.random() * 360,
+          speed: 0.5 + Math.random() * 1.5,
+          element: createPlaneElement(i)
+        };
+        
+        planes.push(plane);
+        planesContainer.appendChild(plane.element);
+      }
+    }
+
+    function createPlaneElement(id) {
+      const planeContainer = document.createElement('div');
+      planeContainer.className = 'plane-container';
+      planeContainer.id = `plane-${id}`;
+      
+      planeContainer.innerHTML = `
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="paper-plane">
+          <path d="M21.7 2.3C21.5 2.1 21.2 2 21 2C20.9 2 20.8 2 20.7 2.1L2.7 9.1C2.3 9.2 2.1 9.6 2 10C2 10.4 2.2 10.7 2.6 10.9L8 13.4V19C8 19.4 8.2 19.8 8.6 19.9C8.7 20 8.8 20 9 20C9.3 20 9.5 19.9 9.7 19.7L12.6 16.8L16.6 19.2C16.8 19.3 16.9 19.3 17.1 19.3C17.2 19.3 17.4 19.3 17.5 19.2C17.8 19.1 18 18.8 18 18.5V3C18 2.8 17.9 2.5 17.7 2.3Z" fill="#E0E0E0"/>
+        </svg>
+        <div class="plane-tooltip">Click to see activities!</div>
+      `;
+      
+      planeContainer.addEventListener('click', () => toggleSection('activities'));
+      
+      return planeContainer;
+    }
+
+    // Update plane positions
+    function updatePlanes() {
+      planes.forEach(plane => {
+        // Update position
+        plane.x = (plane.x + plane.speed * 0.05) % 100;
+        plane.y = plane.y + Math.sin(plane.x / 10) * 0.01;
+        plane.rotation = plane.rotation + plane.speed * 0.1;
+        
+        // Check if mouse is close to plane
+        const planeX = (plane.x * window.innerWidth) / 100;
+        const planeY = (plane.y * window.innerHeight) / 100;
+        const dx = mousePosition.x - planeX;
+        const dy = mousePosition.y - planeY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        // If mouse is close, adjust plane position
+        if (distance < 200) {
+          // Calculate repulsion vector
+          const repulsionFactor = 0.1;
+          const repulsionX = (dx / distance) * repulsionFactor * -1;
+          const repulsionY = (dy / distance) * repulsionFactor * -1;
+          
+          // Update position with repulsion
+          plane.x = plane.x + repulsionX;
+          plane.y = plane.y + repulsionY;
+          
+          // Calculate new rotation to face away from mouse
+          plane.rotation = Math.atan2(dy, dx) * (180 / Math.PI) + 180;
+        }
+        
+        // Update DOM element
+        plane.element.style.left = `${plane.x}%`;
+        plane.element.style.top = `${plane.y}%`;
+        plane.element.style.transform = `rotate(${plane.rotation}deg)`;
+      });
+      
+      animationFrameId = requestAnimationFrame(updatePlanes);
+    }
+
+    // Initialize
+    createPlanes();
+    updatePlanes();
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    });
+  </script>
+</body>
+</html>
